@@ -33,11 +33,14 @@ public class User {
     private List<Event> events = new ArrayList<>();
 
 
-    public User(String name, String surname, String eMail){
+    public User(String name, String surname, String eMail, String password){
         this.name = name;
         this.surname = surname;
         this.eMail = eMail;
+        this.password = password;
         this.role = Role.NORMALUSER;
     }
+
+
 
 }
