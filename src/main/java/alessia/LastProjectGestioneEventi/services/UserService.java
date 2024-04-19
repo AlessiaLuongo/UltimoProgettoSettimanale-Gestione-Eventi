@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -25,6 +26,9 @@ public class UserService {
 
     @Autowired
     private EventDAO eventDAO;
+
+    @Autowired
+    private PasswordEncoder bcrypt;
 
 
     public Page<User> getAllUsers(int page, int size, String sortBy){
@@ -41,7 +45,7 @@ public class UserService {
                 }
 
         );
-        User newUser = new User(body.name(), body.surname(), body.email(), body.password());
+        User newUser = new User(body.name(), body.surname(), body.email(), bcrypt.encode(body.password()));
         return usersDAO.save(newUser);
     }
     public User findById(UUID userId){
@@ -73,5 +77,9 @@ public class UserService {
         }else{
             throw new NotFoundException(id);
         }
+    }
+
+    public User findByeMail(String eMail){
+        return usersDAO.findByeMail(eMail).orElseThrow(() -> new NotFoundException("No User with this email " + eMail + "found"));
     }
 }
