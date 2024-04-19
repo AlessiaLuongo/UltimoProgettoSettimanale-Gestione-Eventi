@@ -1,5 +1,7 @@
 package alessia.LastProjectGestioneEventi.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -16,6 +18,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
+@JsonIgnoreProperties({"authorities", "credentialsNonExpired", "accountNonExpired", "role"})
 
 public class User implements UserDetails {
     @Id
@@ -42,7 +45,7 @@ public class User implements UserDetails {
         this.surname = surname;
         this.eMail = eMail;
         this.password = password;
-        this.role = Role.NORMALUSER;
+        this.role = Role.EVENTPLANNER;
     }
 
 

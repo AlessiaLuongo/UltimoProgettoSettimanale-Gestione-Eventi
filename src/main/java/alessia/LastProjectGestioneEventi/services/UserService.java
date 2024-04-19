@@ -58,6 +58,7 @@ public class UserService {
             User found = optionalUser.get();
             found.setName(updatedUser.getName());
             found.setSurname(updatedUser.getSurname());
+            found.setEMail(updatedUser.getEMail());
 
             return this.usersDAO.save(found);
         }else {
