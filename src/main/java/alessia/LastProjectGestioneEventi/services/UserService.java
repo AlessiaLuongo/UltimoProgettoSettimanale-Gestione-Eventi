@@ -1,7 +1,9 @@
 package alessia.LastProjectGestioneEventi.services;
 
+import alessia.LastProjectGestioneEventi.entities.Event;
 import alessia.LastProjectGestioneEventi.entities.User;
 import alessia.LastProjectGestioneEventi.exceptions.BadRequestException;
+import alessia.LastProjectGestioneEventi.exceptions.NotFoundException;
 import alessia.LastProjectGestioneEventi.payload.NewUserPayload;
 import alessia.LastProjectGestioneEventi.repositories.EventDAO;
 import alessia.LastProjectGestioneEventi.repositories.UserDAO;
@@ -11,6 +13,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class UserService {
@@ -38,5 +43,35 @@ public class UserService {
         );
         User newUser = new User(body.name(), body.surname(), body.email(), body.password());
         return usersDAO.save(newUser);
+    }
+    public User findById(UUID userId){
+        return this.usersDAO.findById(userId).orElseThrow(() -> new NotFoundException(userId));
+    }
+
+    public User findUserByIdAndUpdate(UUID id, User updatedUser){
+        Optional<User> optionalUser = usersDAO.findById(id);
+        if (optionalUser.isPresent()){
+            User found = optionalUser.get();
+            found.setName(updatedUser.getName());
+            found.setSurname(updatedUser.getSurname());
+
+            return this.usersDAO.save(found);
+        }else {
+            throw new NotFoundException(id);
+        }
+
+
+    }
+
+
+
+    public void findUserByIdAndDelete(UUID id){
+        Optional<User> optionalUser = usersDAO.findById(id);
+        if (optionalUser.isPresent()){
+            User found = optionalUser.get();
+            this.usersDAO.delete(found);
+        }else{
+            throw new NotFoundException(id);
+        }
     }
 }
