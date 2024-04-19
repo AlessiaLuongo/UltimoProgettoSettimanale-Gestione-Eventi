@@ -1,5 +1,6 @@
 package alessia.LastProjectGestioneEventi.controllers;
 
+import alessia.LastProjectGestioneEventi.entities.Event;
 import alessia.LastProjectGestioneEventi.entities.User;
 import alessia.LastProjectGestioneEventi.exceptions.BadRequestException;
 import alessia.LastProjectGestioneEventi.payload.NewUserPayload;
@@ -72,6 +73,12 @@ public class UserController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteProfile(@AuthenticationPrincipal User currentAuthenticatedUser){
         this.userService.findUserByIdAndDelete(currentAuthenticatedUser.getId());
+    }
+
+    @PatchMapping("/{userId}")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public void addEvent(@PathVariable UUID userId, @RequestBody Event event){
+        this.userService.addEvent(userId, event);
     }
 
 }

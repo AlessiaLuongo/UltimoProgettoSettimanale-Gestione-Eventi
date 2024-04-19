@@ -15,6 +15,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -82,5 +83,18 @@ public class UserService {
 
     public User findByeMail(String eMail){
         return usersDAO.findByeMail(eMail).orElseThrow(() -> new NotFoundException("No User with this email " + eMail + "found"));
+    }
+
+    public void addEvent(UUID userId, Event event){
+        User user = usersDAO.findById(userId).orElseThrow(() -> new NotFoundException(userId));
+
+        {
+
+            event.getUsers().add(user);
+            user.getEvents().add(event);
+            usersDAO.save(user);
+            eventDAO.save(event);
+
+        }
     }
 }
